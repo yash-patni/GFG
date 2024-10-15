@@ -9,21 +9,18 @@ class Solution {
     // Function to count the number of subarrays which adds to the given sum.
     int subArraySum(vector<int>& arr, int tar) {
         // Your code here
-        int prefSum = 0;
-        int cnt = 0;
         unordered_map<int,int> mp;
-        mp[0] = 1;
-        for(int i = 0; i < arr.size(); i++)
-        {
-            prefSum += arr[i];
-            int remove = prefSum - tar;
-            if(mp.find(remove) != mp.end())
-            {
-                cnt += mp[remove];
+        int n = arr.size();
+        int sum = 0;
+        int cnt=  0;
+        for(int i = 0 ; i < n ; i++){
+            sum+=arr[i];
+            if(sum == tar) cnt++;
+            if(mp.find(sum - tar) != mp.end()){
+                cnt+=mp[sum-tar];
             }
-            mp[prefSum] += 1;
+            mp[sum]++;
         }
-        
         return cnt;
     }
 };
