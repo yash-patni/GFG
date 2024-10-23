@@ -119,6 +119,9 @@ class Solution {
         solve(root, 0, ans);
         return ans;
     }
+    
+    //TC: O(N) 
+    // SC:O(h)
 };
 
 //{ Driver Code Starts.
