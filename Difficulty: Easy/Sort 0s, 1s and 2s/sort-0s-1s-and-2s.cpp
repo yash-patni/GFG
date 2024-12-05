@@ -7,21 +7,22 @@ using namespace std;
 class Solution {
   public:
     void sort012(vector<int>& arr) {
-        int i=0,n=arr.size(),zero=0,two=n-1;
-        while(i<=two)
-        {
-            if(arr[i]==0)
-            {
-                swap(arr[i],arr[zero]);
-                zero++;
+        // code here
+        int n=arr.size();
+        int left=0, mid=0;
+        int right=n-1;
+        
+        while(mid<=right){
+            if(arr[mid]==0){
+                swap(arr[mid], arr[left]);
+                left++;
             }
-            else if(arr[i]==2)
-            {
-                swap(arr[i],arr[two]);
-                two--;
-                i--;
+            else if(arr[mid]==2){
+                swap(arr[mid], arr[right]);
+                right--;
+                mid--;
             }
-            i++;
+            mid++;
         }
     }
 };
@@ -52,6 +53,7 @@ int main() {
         }
 
         cout << endl;
+        cout << "~" << endl;
     }
     return 0;
 }
