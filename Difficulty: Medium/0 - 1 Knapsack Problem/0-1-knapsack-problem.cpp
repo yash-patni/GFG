@@ -7,71 +7,61 @@ using namespace std;
 
 class Solution {
   public:
-    // Function to return max value that can be put in knapsack of capacity W.
-    int solve(int W,vector<int>& wt,vector<int>& val,int sum,int& n,int i){
-        if(i>=n){
-            return sum;
+    int knapsack(int w, vector<int> &val, vector<int> &wt) {
+        // code here
+        int n=val.size();
+        vector<int> dp(w+1,0);
+        for (int i=0;i<n;i++){
+            for(int j=w;j>=wt[i];j--){
+                dp[j]=max(dp[j],val[i]+dp[j-wt[i]]);
+            }
         }
-        if(W-wt[i]>=0){
-            int taken = solve(W-wt[i],wt,val,sum+val[i],n,i+1);
-            int notTaken = solve(W,wt,val,sum,n,i+1);
-            return max(taken,notTaken);
-        }
-        else{
-            int notTaken = solve(W,wt,val,sum,n,i+1);
-            return max(sum,notTaken);
-        }
-    }
-    int knapSack(int W, vector<int>& wt, vector<int>& val) {
-        // Your code here
-        int sum = 0;
-        int n = wt.size();
-        int taken = solve(W,wt,val,sum,n,0);
-        int notTaken = solve(W,wt,val,sum,n,1);
-        return max(taken,notTaken);
+        return dp[w];
     }
 };
+
 
 //{ Driver Code Starts.
 
 int main() {
-    // taking total testcases
-    int t;
-    cin >> t;
+    // Taking total test cases
+    int testCases;
+    cin >> testCases;
     cin.ignore();
-    while (t--) {
-        // reading number of elements and weight
-        int n, w;
-        vector<int> arr, val, wt, drr;
-        string ip;
+    while (testCases--) {
+        // Reading number of items and capacity
+        int numberOfItems, capacity;
+        vector<int> weights, values;
+        string input;
         int number;
-        getline(cin, ip);
-        stringstream ss(ip);
 
-        while (ss >> number) {
-            arr.push_back(number);
-        }
+        // Read capacity and number of items
+        getline(cin, input);
+        stringstream ss(input);
+        ss >> capacity;      // The first number is the capacity
+        ss >> numberOfItems; // The second number is the number of items
 
-        getline(cin, ip);
+        // Read values
+        getline(cin, input);
         ss.clear();
-        ss.str(ip);
-
+        ss.str(input);
         while (ss >> number) {
-            val.push_back(number);
+            values.push_back(number);
         }
 
-        w = arr[0];
-        n = val.size();
-        getline(cin, ip);
+        // Read weights
+        getline(cin, input);
         ss.clear();
-        ss.str(ip);
-
+        ss.str(input);
         while (ss >> number) {
-            wt.push_back(number);
+            weights.push_back(number);
         }
-        Solution ob;
-        cout << ob.knapSack(w, wt, val) << endl;
+
+        Solution solution;
+        cout << solution.knapsack(capacity, values, weights) << endl;
+        cout << "~" << endl;
     }
     return 0;
 }
+
 // } Driver Code Ends
