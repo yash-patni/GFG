@@ -1,44 +1,56 @@
 //{ Driver Code Starts
-// Initial template for C++
-
 #include <bits/stdc++.h>
 using namespace std;
 
 
 // } Driver Code Ends
-// User function template for C++
+
 class Solution {
   public:
-
-    // Note that the size of the array is n-1
-    int missingNumber(int n, vector<int>& arr) {
-        // Your code goes
-        int sum=(n)*(n+1)/2;
-        int sz=arr.size();
-        int asum=0;
-        for(int i=0;i<sz;i++){
-            asum+=arr[i];
+    int missingNum(vector<int>& arr) {
+        // code here
+        int n=arr.size();
+        // int sum=(n+1)*(n+2)/2;
+        // int suma=0;
+        // for(int i=0;i<n;i++){
+        //     suma+=arr[i];
+        // }
+        // return sum-suma;
+        
+        int xorr=n+1;
+        for(int i=0;i<n;i++){
+            xorr^=arr[i];
+            xorr^=i+1;
         }
-        if(sum==asum) return n;
-        return sum-asum;
+        return xorr;
     }
 };
+
 
 //{ Driver Code Starts.
 
 int main() {
     int t;
     cin >> t;
+    cin.ignore(); // to ignore the newline after the integer input
     while (t--) {
         int n;
-        cin >> n;
+        vector<int> a;
+        string input;
 
-        vector<int> arr(n - 1);
-        for (int i = 0; i < n - 1; ++i)
-            cin >> arr[i];
+        // Input format: first number n followed by the array elements
+        getline(cin, input);
+        stringstream ss(input);
+        int num;
+        while (ss >> num)
+            a.push_back(num);
+
         Solution obj;
-        cout << obj.missingNumber(n, arr) << "\n";
+        cout << obj.missingNum(a) << endl;
+        cout << "~\n";
     }
+
     return 0;
 }
+
 // } Driver Code Ends
