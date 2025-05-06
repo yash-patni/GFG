@@ -9,6 +9,58 @@ struct Node {
     Node* right;
 };
 
+
+// } Driver Code Ends
+
+/* A binary tree node
+
+struct Node
+{
+    int data;
+    struct Node* left;
+    struct Node* right;
+
+    Node(int x){
+        data = x;
+        left = right = NULL;
+    }
+};
+ */
+
+class Solution {
+  public:
+    vector<int> leftView(Node *root) {
+        // code here
+        if(root == NULL){
+            return {};
+        }
+        queue<Node*> q;
+        q.push(root);
+        vector<int> ans;
+        
+        while(!q.empty()){
+            int n = q.size();
+            Node* node = NULL;
+            
+            while(n--){
+                node = q.front();
+                q.pop();
+                if(node->right){
+                    q.push(node->right);
+                }
+                if(node->left){
+                    q.push(node->left);
+                }
+            }
+            ans.push_back(node->data);
+        }
+        return ans;
+    }
+};
+
+
+//{ Driver Code Starts.
+
 // Utility function to create a new Tree Node
 Node* newNode(int val) {
     Node* temp = new Node;
@@ -85,47 +137,6 @@ Node* buildTree(string str) {
     return root;
 }
 
-
-// } Driver Code Ends
-/* A binary tree node
-
-struct Node
-{
-    int data;
-    struct Node* left;
-    struct Node* right;
-
-    Node(int x){
-        data = x;
-        left = right = NULL;
-    }
-};
- */
-
-class Solution {
-  public:
-    void solve(Node* root, int level, vector<int>& ds){
-        if(root==NULL) return;
-        if(level==ds.size()){
-            ds.push_back(root->data);
-        }
-        solve(root->left, level+1, ds);
-        solve(root->right, level+1, ds);
-        
-    }
-    vector<int> leftView(Node *root) {
-        // code here
-        vector<int> ans;
-        solve(root, 0, ans);
-        return ans;
-    }
-    
-    //TC: O(N) 
-    // SC:O(h)
-};
-
-//{ Driver Code Starts.
-
 int main() {
     int t;
     scanf("%d ", &t);
@@ -135,9 +146,15 @@ int main() {
         Node* root = buildTree(s);
         Solution ob;
         vector<int> vec = ob.leftView(root);
+        if (vec.size() == 0) {
+            cout << "[]";
+        }
         for (int x : vec)
             cout << x << " ";
         cout << endl;
+
+        cout << "~"
+             << "\n";
     }
     return 0;
 }
