@@ -1,89 +1,6 @@
-//{ Driver Code Starts
-//Initial Template for C++
-
-#include <bits/stdc++.h>
-using namespace std;
-
-struct Node {
-    int data;
-    Node *left;
-    Node *right;
-
-    Node(int val) {
-        data = val;
-        left = right = NULL;
-    }
-};
-
-
-Node *buildTree(string str) {
-    // Corner Case
-    if (str.length() == 0 || str[0] == 'N')
-        return NULL;
-
-    // Creating vector of strings from input
-    // string after spliting by space
-    vector<string> ip;
-
-    istringstream iss(str);
-    for (string str; iss >> str;)
-        ip.push_back(str);
-
-    // Create the root of the tree
-    Node *root = new Node(stoi(ip[0]));
-
-    // Push the root to the queue
-    queue<Node *> queue;
-    queue.push(root);
-
-    // Starting from the second element
-    int i = 1;
-    while (!queue.empty() && i < ip.size()) {
-
-        // Get and remove the front of the queue
-        Node *currNode = queue.front();
-        queue.pop();
-
-        // Get the current Node's value from the string
-        string currVal = ip[i];
-
-        // If the left child is not null
-        if (currVal != "N") {
-
-            // Create the left child for the current Node
-            currNode->left = new Node(stoi(currVal));
-
-            // Push it to the queue
-            queue.push(currNode->left);
-        }
-
-        // For the right child
-        i++;
-        if (i >= ip.size())
-            break;
-        currVal = ip[i];
-
-        // If the right child is not null
-        if (currVal != "N") {
-
-            // Create the right child for the current Node
-            currNode->right = new Node(stoi(currVal));
-
-            // Push it to the queue
-            queue.push(currNode->right);
-        }
-        i++;
-    }
-
-    return root;
-}
-
-
-// } Driver Code Ends
-//User function Template for C++
-
 /*
-struct Node {
+class Node {
+  public:
     int data;
     Node *left;
     Node *right;
@@ -96,63 +13,51 @@ struct Node {
 */
 class Solution {
   public:
-    pair<bool,int> get_time(Node* root, int &target, int &ans){
-        if(!root){
-            return {false, 0};
-        }
-        pair<bool,int>left = get_time(root->left, target, ans), right = get_time(root->right, target, ans);
-        if(!left.first && !right.first){
-            ans = max({ans, left.second, right.second});
-            int val = max(left.second, right.second);
-            if(root->data == target){
-                return {true, 1};
+    void Solve(Node* root,int &maxi){
+      if(!root)
+      return;
+      maxi=max(root->data,maxi);
+      Solve(root->left,maxi);
+      Solve(root->right,maxi);
+  }
+  void consGraph(vector<int>g[],Node* root){
+      if(!root)
+      return;
+      if(root->left){
+          g[root->data].push_back(root->left->data);
+          g[root->left->data].push_back(root->data);
+      }
+      if(root->right){
+          g[root->data].push_back(root->right->data);
+          g[root->right->data].push_back(root->data);
+          
+      }
+      consGraph(g,root->left);
+      consGraph(g,root->right);
+  }
+    int minTime(Node* root, int target) {
+        
+        int maxi=INT_MIN;
+        Solve(root,maxi);
+        vector<int>graph[maxi+1];
+        consGraph(graph,root);
+        vector<bool>visit(maxi+1,false);
+        visit[target]=true;
+        queue<pair<int,int>>q;
+        q.push({target,0});
+        int ans=INT_MIN;
+        while(q.empty()==false){
+            int u=q.front().first;
+            int dist=q.front().second;
+            q.pop();
+            ans=max(ans,dist);
+            for(auto v:graph[u]){
+                if(visit[v]==false){
+                    q.push({v,dist+1});
+                    visit[v]=true;
+                }
             }
-            return {false, 1+val};
         }
-        else{
-            ans = max(ans, left.second + right.second);
-            if(left.first){
-                return {true, 1+left.second};
-            }
-            else{
-                return {true, 1+right.second};
-            }
-        }
-    }
-    int minTime(Node* root, int target) 
-    {
-        // Your code goes here
-        int ans = 0;
-        get_time(root, target, ans);
         return ans;
     }
 };
-
-//{ Driver Code Starts.
-
-int main() 
-{
-    int tc;
-    scanf("%d ", &tc);
-    while (tc--) 
-    {    
-        string treeString;
-        getline(cin, treeString);
-        // cout<<treeString<<"\n";
-        int target;
-        cin>>target;
-        // cout<<target<<"\n";
-
-        Node *root = buildTree(treeString);
-        Solution obj;
-        cout<<obj.minTime(root, target)<<"\n"; 
-
-        cin.ignore();
-
-    }
-
-
-    return 0;
-}
-
-// } Driver Code Ends
